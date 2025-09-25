@@ -1,1 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArogyaBandhu - Odisha's Health Companion</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #ff9933;
+            --accent-color: #138808;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --border-color: #dee2e6;
+        }
+        
+        /* --- CSS FIXES START HERE --- */
+        html {
+            height: 100%;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Use min-height to allow page to grow */
+            margin: 0;
+        }
+        /* --- CSS FIXES END HERE --- */
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 1.5rem 0;
+            border-bottom: 5px solid var(--secondary-color);
+            flex-shrink: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            color: var(--secondary-color);
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .left-sidebar {
+            flex: 0 0 250px;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .chat-area-wrapper {
+            flex-grow: 1;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .features-section-sidebar {
+            flex: 0 0 300px;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .left-sidebar h5 {
+            font-weight: bold;
+        }
+        .left-sidebar .chat-history-item {
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .left-sidebar .chat-history-item:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            height: fit-content; /* Adjust height */
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color), #0a58ca);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+        }
+        .user-message { justify-content: flex-end; }
+        .bot-message { justify-content: flex-start; }
+        
+        .message-content {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+        }
+        .message-content p:last-child { margin-bottom: 0; }
+        .user-message .message-content { background-color: var(--primary-color); color: white; }
+        .bot-message .message-content { background-color: #e9ecef; color: #333; }
+        
+        .typing-indicator { display: inline-flex; align-items: center; padding: 0.75rem 1rem; background-color: #e9ecef; border-radius: 18px; }
+        .typing-dot { width: 8px; height: 8px; margin: 0 3px; background-color: #6c757d; border-radius: 50%; animation: typing-animation 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing-animation { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+        
+        .chat-input { display: flex; padding: 1rem; background-color: white; border-top: 1px solid var(--border-color); }
+        .chat-input input { flex: 1; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 20px; margin-right: 10px; }
+        .chat-input button { border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        
+        .features-section-sidebar .feature-card {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        }
+        .features-section-sidebar .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color); }
+        .features-section-sidebar h3 { font-size: 1.1rem; }
+        .features-section-sidebar p { display: none; }
+        
+        .language-option { margin: 0 5px; cursor: pointer; padding: 5px 10px; border-radius: 5px; border: 1px solid #ced4da; }
+        .language-option.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        .footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content-wrapper {
+                flex-direction: column;
+            }
+            .left-sidebar, .features-section-sidebar {
+                flex: 1 0 auto;
+                border: none;
+            }
+            .chat-area-wrapper {
+                padding: 1rem;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <i class="fas fa-heartbeat logo"></i>
+                <h1>ArogyaBandhu</h1>
+            </div>
+            <p class="text-center mb-0">ଆରୋଗ୍ୟବନ୍ଧୁ - Odisha's AI Health Companion</p>
+        </div>
+    </header>
+
+    <div class="main-content-wrapper">
+        
+        <aside class="left-sidebar">
+            <h5>Chats</h5>
+            <div class="chat-history-item">Dengue Symptoms</div>
+            <div class="chat-history-item">BSKY Scheme Details</div>
+        </aside>
+
+        <div class="chat-area-wrapper">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2 class="mb-0">Chat with ArogyaBandhu</h2>
+                    <div class="d-flex justify-content-center mt-2">
+                        <span class="language-option active" id="english-lang">English</span>
+                        <span class="language-option" id="hindi-lang">Hindi (हिंदी)</span>
+                        <span class="language-option" id="odia-lang">Odia (ଓଡିଆ)</span>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <p>Hello! I'm ArogyaBandhu, your AI health companion. How can I help you today?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="Type your message here...">
+                    <button class="btn btn-secondary" id="mic-btn" style="margin-right: 10px;">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="btn btn-primary" id="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="features-section-sidebar">
+            <h2 class="text-center">Key Features</h2>
+            <div class="feature-card">
+                <i class="fas fa-disease feature-icon"></i>
+                <h3>Disease Information</h3>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-hand-holding-usd feature-icon"></i>
+                <h3>Health Schemes</h3>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-map-marker-alt feature-icon"></i>
+                <h3>Find Facilities</h3>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-language feature-icon"></i>
+                <h3>Multilingual Support</h3>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-microphone feature-icon"></i>
+                <h3>Voice Support</h3>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-mobile-alt feature-icon"></i>
+                <h3>Mobile Friendly</h3>
+            </div>
+        </aside>
+
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="">
+                    <h3>ArogyaBandhu</h3>
+                    <p>An AI-Driven Public Health Chatbot for the Government of Odisha</p>
+                </div>
+                <div class="col-md-6">
+                    <p>Developed for Smart India Hackathon</p>
+                    <p>© 2025 Government of Odisha Health & Family Welfare Department</p>
+                </div>
+                <div class="col-md-6">
+                    <p>Contact Us: @arogyabandhu.com</p>
+                    <p>TEAM :-</p>
+                    <p>Manasvi vyas, Mohammed Sameer, Mohammed Touqeer Raza,</p>
+                    <p>Nizba Khan, Dhawal Bohra, Parv Shah</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const englishLang = document.getElementById('english-lang');
+        const hindiLang = document.getElementById('hindi-lang');
+        const odiaLang = document.getElementById('odia-lang');
+        
+        let currentLanguage = 'english';
+        let sessionId = null;
+        const N8N_WEBHOOK_URL = 'https://n8n-service-jy2a.onrender.com/webhook/arogyabandhu-chat';
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            micBtn.addEventListener('click', () => {
+                micBtn.classList.add('btn-danger');
+                micBtn.disabled = true;
+                recognition.lang = currentLanguage === 'odia' ? 'or-IN' : (currentLanguage === 'hindi' ? 'hi-IN' : 'en-US');
+                recognition.start();
+            });
+
+            recognition.onresult = (event) => {
+                const speechResult = event.results[0][0].transcript;
+                userInput.value = speechResult;
+                handleUserInput();
+            };
+            
+            recognition.onspeechend = () => {
+                recognition.stop();
+                micBtn.classList.remove('btn-danger');
+                micBtn.disabled = false;
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                micBtn.classList.remove('btn-danger');
+                micBtn.disabled = false;
+            };
+
+        } else {
+            console.log("Speech Recognition not supported in this browser.");
+            micBtn.style.display = 'none';
+        }
+
+        function speakText(text) {
+            const cleanText = text.replace(/[*#]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = currentLanguage === 'odia' ? 'or-IN' : (currentLanguage === 'hindi' ? 'hi-IN' : 'en-US');
+            speechSynthesis.speak(utterance);
+        }
+
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+            if (isUser) {
+                const messageText = document.createElement('p');
+                messageText.textContent = message;
+                messageContent.appendChild(messageText);
+            } else {
+                messageContent.innerHTML = marked.parse(message);
+            }
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+        
+        function showTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'bot-message');
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('typing-indicator');
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('typing-dot');
+                messageContent.appendChild(dot);
+            }
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+        
+        async function sendMessageToBackend(message) {
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        language: currentLanguage,
+                        session_id: sessionId
+                    })
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                if (data.session_id) sessionId = data.session_id;
+                return data.reply || "No reply from n8n";
+            } catch (error) {
+                console.error('Error communicating:', error);
+                return "Sorry, I can’t connect right now.";
+            }
+        }
+        
+        async function handleUserInput() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+                const typingIndicator = showTypingIndicator();
+                const response = await sendMessageToBackend(message);
+                chatMessages.removeChild(typingIndicator);
+                addMessage(response, false);
+                speakText(response);
+            }
+        }
+        
+        sendBtn.addEventListener('click', handleUserInput);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleUserInput();
+        });
+        
+        function setActiveLanguage(selectedLang) {
+            const langOptions = document.querySelectorAll('.language-option');
+            langOptions.forEach(opt => opt.classList.remove('active'));
+
+            if (selectedLang === 'english') {
+                englishLang.classList.add('active');
+                userInput.placeholder = "Type your message here...";
+                currentLanguage = 'english';
+            } else if (selectedLang === 'hindi') {
+                hindiLang.classList.add('active');
+                userInput.placeholder = "अपना संदेश यहां टाइप करें...";
+                currentLanguage = 'hindi';
+            } else if (selectedLang === 'odia') {
+                odiaLang.classList.add('active');
+                userInput.placeholder = "ଆପଣଙ୍କର ସନ୍ଦେଶ ଏଠାରେ ଟାଇପ୍ କରନ୍ତୁ...";
+                currentLanguage = 'odia';
+            }
+        }
+
+        englishLang.addEventListener('click', () => setActiveLanguage('english'));
+        hindiLang.addEventListener('click', () => setActiveLanguage('hindi'));
+        odiaLang.addEventListener('click', () => setActiveLanguage('odia'));
+    });
+    </script>
+</body>
+</html>
